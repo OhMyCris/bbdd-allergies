@@ -57,7 +57,28 @@ const deleteFoods = async(req, res) => {
     }
 }
 
+const getFoodByQr = async (req, res) => {
+    try {
+        const itemQr = req.params.qr
+        const food = await Food.findOne({"QR": itemQr})
+        console.log(itemQr)
+        return res.status(200).json(food)
+    } catch (error) {
+        return res.status(500).json({message: `Food with QR ${itemQr} not found`})
+    }
+}
+
+const getFoodByBarcode = async (req, res) => {
+    try {
+        const itemBarcode = req.params.barcode
+        const food = await Food.findOne({"barcode": itemBarcode})
+        return res.status(200).json(food)
+    } catch (error) {
+        return res.status(500).json({message: `Food with Barcode ${itemBarcode} not found`})
+    }
+}
+
 
 module.exports = {
-    getFoods, postFoods, putFoods, deleteFoods
+    getFoods, postFoods, putFoods, deleteFoods, getFoodByQr, getFoodByBarcode
 }
