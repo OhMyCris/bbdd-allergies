@@ -9,7 +9,7 @@ const userSchema = new Schema(
         fullname:{type: String, required: true, trim: true},
         email:{type: String, unique: true, required: true, trim: true},
         password:{type: String, required: true, trim: true},
-        allergies:{type: String, required: false, trim: true},
+        allergies:[{type: String, required: false, trim: true}],
         favorites:[{type:Schema.Types.ObjectId, ref:"Food"}]
     }, {
         timestamps:true //te genera la fecha de creacion y modificacion del objeto

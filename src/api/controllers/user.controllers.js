@@ -123,6 +123,28 @@ const getUsers = async(req, res) => {
 
 // }
 
+const patchUsers = async(req, res) => {
+    try {
+        //recoge el parametro de la url que se va a atacar y modificar
+            const {id} = req.params;
+        //Actualizamos el documento con los campos proporcionados en req.body
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: id },
+                { $set: req.body },
+                { new: true }
+                );
+        //Si no se encuentra el usuario
+            if (!updatedUser) {
+                return res.status(404).json({message:"no tenemos ese user con ese ID"});
+            }
+            return res.status(200).json(updatedUser);
+
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+
+}
+
 const deleteUsers = async(req, res) => {
     try {
         const {id} = req.params;
@@ -138,5 +160,5 @@ const deleteUsers = async(req, res) => {
 
 
 module.exports = {
-    createUser, authenticate, logout, getUsers, deleteUsers
+    createUser, authenticate, logout, getUsers, patchUsers, deleteUsers
 }
