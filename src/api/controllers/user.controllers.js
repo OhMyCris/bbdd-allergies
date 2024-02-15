@@ -88,6 +88,16 @@ const getUsers = async(req, res) => {
     }
 }
 
+const getUser = async (req, res) => {
+    try {
+        const id = req.params.id
+        const user = await User.findById(id)
+        return res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).json({message: `User ${id} not found`});
+    }
+}
+
 // const postUsers = async(req, res) => {
 //     try {
 //         // console.log(req.body)
@@ -160,5 +170,5 @@ const deleteUsers = async(req, res) => {
 
 
 module.exports = {
-    createUser, authenticate, logout, getUsers, patchUsers, deleteUsers
+    createUser, authenticate, logout, getUsers, getUser, patchUsers, deleteUsers
 }
