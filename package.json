@@ -21,7 +21,9 @@
     "start": "node script.js",
     "dev": "nodemon script.js",
     "food-seed": "node ./src/seeds/food.seed.js",
-    "allergies-seed": "node ./src/seeds/allergies.seed.js"
+    "allergies-seed": "node ./src/seeds/allergies.seed.js",
+    "emergency-seed": "node ./src/seeds/emergency.seed.js",
+    "diario-seed": "node ./src/seeds/diario.seed.js"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,8 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
 
 
@@ -8,6 +10,7 @@ const dotenv = require("dotenv").config();
 const {connect} = require('./src/utils/db')
 const userRoutes = require('./src/api/routes/user.routes')
 const emergencyRoutes = require('./src/api/routes/emergency.routes')
+const diarioRoutes = require('./src/api/routes/diario.routes')
 const foodRoutes = require('./src/api/routes/food.routes')
 const allergiesRoutes = require('./src/api/routes/allergies.routes')
 
@@ -20,6 +23,7 @@ connect();
 
 //Esto se usa para que no inyecten codigo de mongo y express y externos se puedan meter en nuestra BBDD
 const mongoSanitize = require('express-mongo-sanitize');
+const User = require("./src/api/models/user.model");
 app.use(mongoSanitize());
 
 //Recibir e interpretar JSON desde Postman o un front
@@ -41,8 +45,57 @@ app.set("secretKey", "nodeRestApi");
 
 app.use('/users', userRoutes)
 app.use('/emergency', emergencyRoutes)
+app.use('/diario', diarioRoutes)
 app.use('/food', foodRoutes)
 app.use('/allergies', allergiesRoutes)
+app.post('/registro',  async(req, res) => {
+  try {
+      const newUser = new User(req.body);
+
+
+      //Encriptar Password
+      newUser.password = bcrypt.hashSync(newUser.password, 10);
+      const createdUser = await newUser.save();
+
+      return res.status(201).json(createdUser)
+  } catch (error) {
+      return res.status(500).json(error); 
+  }
+})
+
+app.post('/login', async (req, res, next) => {
+  try {
+      const userInfo = await User.findOne({ email: req.body.email })
+      //comprueba si la contraseña que te envían coincide con la que tienes guardada de ese email
+      if (bcrypt.compareSync(req.body.password, userInfo.password)) {
+      // if (userInfo.password == req.body.password) {
+          userInfo.password = null
+          const token = jwt.sign(
+              {
+                  id: userInfo._id,
+                  email: userInfo.email
+              },
+              req.app.get("secretKey"),
+              { expiresIn: "1d" }
+          );
+            localStorage.setItem('token', token)
+          //devuelvo el token y email, con la contraseña null
+          return res.json({
+              status: 200,
+              message: HTTPSTATUSCODE[200],
+              data: { user: userInfo, token: token },
+          });
+      } else {
+          return res.json({
+              status: 400,
+              message: HTTPSTATUSCODE[400],
+              data: null
+          });
+      }
+  } catch (error) {
+      return next(error);
+  }
+})
 app.get('/', (req, res, next) => {
   res.status(200).json({
       status: 200,

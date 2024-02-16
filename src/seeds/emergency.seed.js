@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const Emergency = require("../api/models/emergency.model");
 

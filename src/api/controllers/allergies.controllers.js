@@ -2,7 +2,7 @@ const Allergy = require('../models/allergies.model')
 
 const getAllergies = async(req, res) => {
     try {
-        const allAllergies = await Allergy.find().populate('yokais', 'nombre tipo desc foto');
+        const allAllergies = await Allergy.find()
         return res.status(200).json(allAllergies)
     } catch (error) {
         return res.status(500).json(error);
