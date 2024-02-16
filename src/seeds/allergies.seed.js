@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const Allergy = require("../api/models/allergies.model");
 
