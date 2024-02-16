@@ -134,6 +134,7 @@ const getUser = async (req, res) => {
 // }
 
 const patchUsers = async(req, res) => {
+    console.log(req.body);
     try {
         //recoge el parametro de la url que se va a atacar y modificar
             const {id} = req.params;
