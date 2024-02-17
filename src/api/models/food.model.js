@@ -8,7 +8,8 @@ const foodSchema = new Schema(
         "barcode":{type: String, required: true, trim: true},
         "QR":{type: String, required: true, trim: true},
         "ingredientes":[{type: String, required: false, trim: true}],
-        "descripcion":{type: String, required: true, trim: true}
+        "descripcion":{type: String, required: true, trim: true},
+        "marca":{type:String, required:true, trim:true}
     }, {
         timestamps:true //te genera la fecha de creacion y modificacion del objeto
     }
